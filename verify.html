@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Verification - SELFCARE DIAGNOSTICS</title>
+  
+  <!-- Core CSS Stack -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/glassmorphism.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+  <!-- Header Target Injection Anchor -->
+  <div id="headerContainer"></div>
+
+  <!-- Hero Target Injection Anchor -->
+  <div id="heroContainer"></div>
+
+  <!-- Main Verification Workspace -->
+  <main class="container d-flex flex-column align-center justify-center py-4">
+    
+    <div class="glass-card p-3 w-100 mb-4" style="max-width: 520px;">
+      
+      <div class="d-flex flex-column align-center text-center mb-3">
+        <span class="glass-pill mb-2">Acode Inspection Frame</span>
+        <h1 class="text-gradient">Shell & Search Suite</h1>
+        <p class="mt-1">Components, dataset, renderer, and live search controller verification.</p>
+      </div>
+
+      <!-- Global Status Banner -->
+      <div id="statusBanner" class="badge badge-info w-100 justify-center p-2 mb-3" style="font-size: 0.85rem;">
+        ⌛ INITIALIZING VERIFICATION...
+      </div>
+
+      <!-- Component Checklist -->
+      <div class="d-flex flex-column gap-2 p-3 mb-3" style="background: rgba(0,0,0,0.15); border-radius: 8px;">
+        <h4 class="mb-1 text-accent">System Checklist:</h4>
+        <div id="chkHeader" class="small text-secondary">⏳ Header (components/header.html)</div>
+        <div id="chkHero" class="small text-secondary">⏳ Hero (components/hero.html)</div>
+        <div id="chkCard" class="small text-secondary">⏳ Test Card Template (components/test-card.html)</div>
+        <div id="chkFooter" class="small text-secondary">⏳ Footer (components/footer.html)</div>
+        <div id="chkData" class="small text-secondary">⏳ Test Data (assets/js/tests-data.js)</div>
+        <div id="chkRenderer" class="small text-secondary">⏳ Test Renderer (assets/js/test-renderer.js)</div>
+        <div id="chkSearch" class="small text-secondary">⏳ Search Controller (assets/js/search-filter.js)</div>
+      </div>
+
+      <!-- Test Actions -->
+      <div class="d-flex flex-column gap-2">
+        <button class="btn btn-primary btn-full" id="simCartAddBtn">+ Add Item To Header Cart Badge</button>
+      </div>
+
+    </div>
+
+    <!-- Live Dynamic Grid Preview Container -->
+    <div class="w-100 mt-3" style="max-width: 900px;">
+      <h4 class="text-muted mb-3 text-center text-xs text-uppercase" style="letter-spacing: 1px;">Live Searchable Test Grid</h4>
+      <div id="dynamicTestGrid"></div>
+    </div>
+
+  </main>
+
+  <!-- Footer Target Injection Anchor -->
+  <div id="footerContainer"></div>
+
+  <!-- Core Scripts Stack -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/tests-data.js"></script>
+  <script src="assets/js/test-renderer.js"></script>
+  <script src="assets/js/search-filter.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/pwa.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const headerContainer = document.getElementById('headerContainer');
+      const heroContainer = document.getElementById('heroContainer');
+      const footerContainer = document.getElementById('footerContainer');
+      
+      const banner = document.getElementById('statusBanner');
+      const simCartAddBtn = document.getElementById('simCartAddBtn');
+      
+      const chkHeader = document.getElementById('chkHeader');
+      const chkHero = document.getElementById('chkHero');
+      const chkCard = document.getElementById('chkCard');
+      const chkFooter = document.getElementById('chkFooter');
+      const chkData = document.getElementById('chkData');
+      const chkRenderer = document.getElementById('chkRenderer');
+      const chkSearch = document.getElementById('chkSearch');
+
+      let headerLoaded = false;
+      let heroLoaded = false;
+      let cardLoaded = false;
+      let footerLoaded = false;
+      let dataLoaded = false;
+      let rendererLoaded = false;
+      let searchLoaded = false;
+
+      // 1. Check Dataset
+      if (window.TESTS_DATA && Array.isArray(window.TESTS_DATA) && window.TESTS_DATA.length > 0) {
+        dataLoaded = true;
+        chkData.textContent = `✓ Test dataset loaded (${window.TESTS_DATA.length} items available)`;
+        chkData.className = 'small text-success';
+      } else {
+        chkData.textContent = '⚠ Test dataset missing (assets/js/tests-data.js)';
+        chkData.className = 'small text-warning';
+      }
+
+      // 2. Check Renderer
+      if (window.TestRenderer && typeof window.TestRenderer.renderGrid === 'function') {
+        rendererLoaded = true;
+        chkRenderer.textContent = '✓ Dynamic TestRenderer initialized';
+        chkRenderer.className = 'small text-success';
+
+        if (dataLoaded) {
+          window.TestRenderer.renderGrid('dynamicTestGrid', window.TESTS_DATA);
+        }
+      } else {
+        chkRenderer.textContent = '⚠ TestRenderer missing (assets/js/test-renderer.js)';
+        chkRenderer.className = 'small text-warning';
+      }
+
+      // 3. Component Loader
+      async function loadComponent(url, container, chkElement, name) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            if (container) container.innerHTML = await res.text();
+            chkElement.textContent = `✓ ${name} component ready`;
+            chkElement.className = 'small text-success';
+            return true;
+          } else {
+            chkElement.textContent = `⚠ ${name} missing (HTTP ${res.status})`;
+            chkElement.className = 'small text-warning';
+            return false;
+          }
+        } catch (err) {
+          chkElement.textContent = `⚠ ${name} load fallback active`;
+          chkElement.className = 'small text-warning';
+          return false;
+        }
+      }
+
+      headerLoaded = await loadComponent('components/header.html', headerContainer, chkHeader, 'Header');
+      if (headerLoaded) updateHeaderCartBadge();
+
+      heroLoaded = await loadComponent('components/hero.html', heroContainer, chkHero, 'Hero');
+      cardLoaded = await loadComponent('components/test-card.html', null, chkCard, 'Test Card Template');
+      footerLoaded = await loadComponent('components/footer.html', footerContainer, chkFooter, 'Footer');
+
+      // 4. Check & Initialize Search Controller
+      if (window.SearchFilter && typeof window.SearchFilter.init === 'function') {
+        searchLoaded = true;
+        window.SearchFilter.init('dynamicTestGrid');
+        chkSearch.textContent = '✓ SearchFilter active (Try typing in Hero search!)';
+        chkSearch.className = 'small text-success';
+      } else {
+        chkSearch.textContent = '⚠ SearchFilter missing (assets/js/search-filter.js)';
+        chkSearch.className = 'small text-warning';
+      }
+
+      // 5. Update Banner
+      if (headerLoaded && heroLoaded && cardLoaded && footerLoaded && dataLoaded && rendererLoaded && searchLoaded) {
+        banner.className = 'badge badge-success w-100 justify-center p-2 mb-3';
+        banner.textContent = '✓ FULL SHELL, DATA, RENDER, & SEARCH STACK READY';
+      } else {
+        banner.className = 'badge badge-warning w-100 justify-center p-2 mb-3';
+        banner.textContent = '⚠ PARTIAL SYSTEM LOAD';
+      }
+
+      function updateHeaderCartBadge() {
+        const badge = document.getElementById('headerCartBadge');
+        if (badge && window.cartService && typeof window.cartService.getItemCount === 'function') {
+          badge.textContent = window.cartService.getItemCount();
+        }
+      }
+
+      simCartAddBtn.addEventListener('click', () => {
+        if (window.cartService && typeof window.cartService.addItem === 'function') {
+          window.cartService.addItem({
+            id: 'VERIFY_TEST_' + Date.now(),
+            name: 'Diagnostic Package Test',
+            price: 599
+          });
+        } else {
+          alert('Cart Service Error: Make sure assets/js/cart.js is loading correctly.');
+        }
+      });
+
+      window.addEventListener('sc_cart_updated', updateHeaderCartBadge);
+    });
+  </script>
+</body>
+</html>

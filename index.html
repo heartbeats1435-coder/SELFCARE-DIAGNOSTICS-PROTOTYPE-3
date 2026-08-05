@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SELFCARE DIAGNOSTICS - Precision Healthcare & AI Insights</title>
+  
+  <!-- Core CSS Stack -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/glassmorphism.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+  <!-- Header Anchor -->
+  <div id="headerContainer"></div>
+
+  <!-- Hero Anchor -->
+  <div id="heroContainer"></div>
+
+  <!-- Main Content Container -->
+  <main class="container py-4">
+    
+    <!-- Popular Diagnostic Tests Section -->
+    <section class="mb-5">
+      <div class="d-flex justify-between align-center mb-3 flex-wrap gap-2">
+        <div>
+          <span class="glass-pill pill-sm text-xs text-accent">Featured Diagnostics</span>
+          <h2 class="text-gradient mt-1 mb-0">Popular Diagnostic Tests</h2>
+        </div>
+        <a href="tests.html" class="btn btn-outline btn-sm">View All Tests →</a>
+      </div>
+
+      <!-- Dynamic Test Grid Anchor -->
+      <div id="popularTestGrid"></div>
+    </section>
+
+    <!-- Platform Value Proposition / Features Section -->
+    <section class="mb-5">
+      <div class="glass-card p-4">
+        <div class="text-center mb-4">
+          <span class="glass-pill text-xs mb-2">Why Choose Us</span>
+          <h2 class="text-gradient">Seamless Diagnostic Experience</h2>
+        </div>
+
+        <div class="row d-flex flex-wrap gap-3 justify-center">
+          <div class="col-12 col-md-3 glass-card p-3 text-center">
+            <div class="text-accent font-bold mb-2" style="font-size: 1.8rem;">🏠</div>
+            <h4 class="text-white mb-1">Home Collection</h4>
+            <p class="text-muted text-xs mb-0">Trained phlebotomists collect samples right from your doorstep at your preferred time.</p>
+          </div>
+
+          <div class="col-12 col-md-3 glass-card p-3 text-center">
+            <div class="text-accent font-bold mb-2" style="font-size: 1.8rem;">⚡</div>
+            <h4 class="text-white mb-1">Fast Smart Reports</h4>
+            <p class="text-muted text-xs mb-0">Get NABL-certified digital reports delivered securely within 12 to 24 hours.</p>
+          </div>
+
+          <div class="col-12 col-md-3 glass-card p-3 text-center">
+            <div class="text-accent font-bold mb-2" style="font-size: 1.8rem;">🤖</div>
+            <h4 class="text-white mb-1">AI Health Insights</h4>
+            <p class="text-muted text-xs mb-0">Track medical trends over time with automated AI-driven diagnostic summaries.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Anchor -->
+  <div id="footerContainer"></div>
+
+  <!-- Core Scripts Stack -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/tests-data.js"></script>
+  <script src="assets/js/test-renderer.js"></script>
+  <script src="assets/js/search-filter.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/pwa.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Fetch & Inject App Shell Components
+      async function loadShellComponent(url, containerId) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            const el = document.getElementById(containerId);
+            if (el) el.innerHTML = await res.text();
+          }
+        } catch (e) {
+          console.warn('Failed to load shell component:', url, e);
+        }
+      }
+
+      await loadShellComponent('components/header.html', 'headerContainer');
+      await loadShellComponent('components/hero.html', 'heroContainer');
+      await loadShellComponent('components/footer.html', 'footerContainer');
+
+      // 2. Initial Cart Badge Sync
+      function syncCartBadge() {
+        if (window.cartService && typeof window.cartService.getItemCount === 'function') {
+          const badge = document.getElementById('headerCartBadge');
+          if (badge) badge.textContent = window.cartService.getItemCount();
+        }
+      }
+      syncCartBadge();
+
+      // 3. Render Initial Featured Test Grid
+      if (window.TestRenderer && window.TESTS_DATA) {
+        window.TestRenderer.renderGrid('popularTestGrid', window.TESTS_DATA);
+      }
+
+      // 4. Initialize Real-Time Search & Quick Filter Pills
+      if (window.SearchFilter) {
+        window.SearchFilter.init('popularTestGrid');
+      }
+
+      // 5. Listen for Global Cart Updates
+      window.addEventListener('sc_cart_updated', syncCartBadge);
+    });
+  </script>
+</body>
+</html>
