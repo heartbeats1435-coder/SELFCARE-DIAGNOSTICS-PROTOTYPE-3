@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Verification - SELFCARE DIAGNOSTICS</title>
+  <style>
+    :root {
+      --bg-color: #0F172A;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-blue: #2563EB;
+      --accent-cyan: #06B6D4;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --success: #10B981;
+      --danger: #EF4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 1.75rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid rgba(37, 99, 235, 0.4);
+      color: var(--accent-cyan);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .status-banner {
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .status-pass {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--success);
+    }
+
+    .status-fail {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+    }
+
+    .data-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .data-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 1rem;
+    }
+
+    .data-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .data-value {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-main);
+      word-break: break-all;
+      font-family: monospace;
+    }
+
+    .data-value a {
+      color: var(--accent-cyan);
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="badge">Acode Mobile Inspection</div>
+      <h1>Config Verification</h1>
+    </div>
+
+    <div id="statusBanner" class="status-banner status-fail">
+      Checking APP_CONFIG status...
+    </div>
+
+    <div class="data-group">
+      <div class="data-card">
+        <div class="data-label">API Base URL</div>
+        <div class="data-value" id="valApiUrl">Loading...</div>
+      </div>
+
+      <div class="data-card">
+        <div class="data-label">WhatsApp Number</div>
+        <div class="data-value" id="valPhone">Loading...</div>
+      </div>
+
+      <div class="data-card">
+        <div class="data-label">WhatsApp URL</div>
+        <div class="data-value" id="valWaUrl">Loading...</div>
+      </div>
+
+      <div class="data-card">
+        <div class="data-label">UPI ID</div>
+        <div class="data-value" id="valUpi">Loading...</div>
+      </div>
+    </div>
+
+    <div class="footer-note" id="instructionNote">
+      If all 4 values match your project specifications exactly, type <strong>CONFIG VERIFIED</strong> to continue.
+    </div>
+  </div>
+
+  <!-- Load Core Config -->
+  <script src="assets/js/config.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const banner = document.getElementById('statusBanner');
+      const valApiUrl = document.getElementById('valApiUrl');
+      const valPhone = document.getElementById('valPhone');
+      const valWaUrl = document.getElementById('valWaUrl');
+      const valUpi = document.getElementById('valUpi');
+
+      if (typeof window.APP_CONFIG !== 'undefined' && window.APP_CONFIG.BUSINESS) {
+        const config = window.APP_CONFIG;
+        
+        valApiUrl.textContent = config.API_BASE_URL || 'MISSING';
+        valPhone.textContent = config.BUSINESS.WHATSAPP_NUMBER || 'MISSING';
+        
+        if (config.BUSINESS.WHATSAPP_URL) {
+          valWaUrl.innerHTML = `<a href="${config.BUSINESS.WHATSAPP_URL}" target="_blank">${config.BUSINESS.WHATSAPP_URL}</a>`;
+        } else {
+          valWaUrl.textContent = 'MISSING';
+        }
+
+        valUpi.textContent = config.BUSINESS.UPI_ID || 'MISSING';
+
+        // Check if all essential keys exist
+        const isUrlOk = config.API_BASE_URL === 'https://script.google.com/macros/s/AKfycbxwge-ZUFkcShcUfFkgDfWGMoq6rOp8FUchyMVCKnh_GAxk-cavHbMkQMEB4V4-KMWH/exec';
+        const isPhoneOk = config.BUSINESS.WHATSAPP_NUMBER === '7010174890';
+        const isWaOk = config.BUSINESS.WHATSAPP_URL === 'https://wa.me/message/3ZJWAPWYOS3AG1';
+        const isUpiOk = config.BUSINESS.UPI_ID === '0798545a0252206.bqr@kotak';
+
+        if (isUrlOk && isPhoneOk && isWaOk && isUpiOk) {
+          banner.className = 'status-banner status-pass';
+          banner.textContent = '✓ APP_CONFIG LOADED & MATCHED PERFECTLY';
+        } else {
+          banner.className = 'status-banner status-fail';
+          banner.textContent = '⚠ CONFIG LOADED BUT SOME VALUES DO NOT MATCH';
+        }
+      } else {
+        banner.className = 'status-banner status-fail';
+        banner.textContent = '✖ ERROR: config.js failed to load!';
+        valApiUrl.textContent = 'Error: APP_CONFIG undefined';
+        valPhone.textContent = 'Error: APP_CONFIG undefined';
+        valWaUrl.textContent = 'Error: APP_CONFIG undefined';
+        valUpi.textContent = 'Error: APP_CONFIG undefined';
+      }
+    });
+  </script>
+</body>
+</html>
