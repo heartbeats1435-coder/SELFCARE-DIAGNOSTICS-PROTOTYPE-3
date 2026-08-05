@@ -1,0 +1,33 @@
+<!-- components/test-card.html -->
+<div class="glass-card p-3 d-flex flex-column justify-between h-100" style="min-height: 260px;">
+  
+  <div>
+    <!-- Badge Header -->
+    <div class="d-flex justify-between align-center mb-2">
+      <span class="glass-pill pill-sm text-xs text-accent">Blood Test</span>
+      <span class="text-xs text-muted">⏱ 24 Hrs Report</span>
+    </div>
+
+    <!-- Title & Description -->
+    <h3 class="test-title mb-1" style="font-size: 1.1rem; color: #fff;">Complete Blood Count (CBC)</h3>
+    <p class="text-muted text-xs mb-3">Evaluates overall health and detects a wide range of disorders including anemia and infection.</p>
+
+    <!-- Test Features / Meta -->
+    <div class="d-flex align-center gap-2 mb-3">
+      <span class="badge badge-info text-xs">28 Parameters</span>
+      <span class="badge badge-success text-xs">Fasting Required</span>
+    </div>
+  </div>
+
+  <!-- Pricing & Action Row -->
+  <div class="pt-2 border-top-glass d-flex align-center justify-between mt-auto">
+    <div>
+      <span class="text-muted text-xs style-strike" style="text-decoration: line-through;">₹799</span>
+      <div class="text-gradient font-bold" style="font-size: 1.2rem;">₹399</div>
+    </div>
+    <button class="btn btn-primary btn-sm px-3" onclick="if(window.cartService){ window.cartService.addItem({id:'CBC_01', name:'Complete Blood Count (CBC)', price:399}); }">
+      + Add
+    </button>
+  </div>
+
+</div>
