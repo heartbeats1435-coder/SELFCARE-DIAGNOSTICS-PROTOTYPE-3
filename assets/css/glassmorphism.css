@@ -1,0 +1,201 @@
+/**
+ * SELFCARE DIAGNOSTICS - Apple & Samsung Health Inspired Glassmorphism Engine
+ * File: assets/css/glassmorphism.css
+ * Production Mode: TRUE
+ */
+
+/* ==========================================================================
+   1. CORE GLASS CONTAINERS & CARDS
+   ========================================================================== */
+
+/* Standard Frosted Glass Surface */
+.glass-card {
+  background: rgba(30, 41, 59, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-normal, 0.3s ease), 
+              border-color var(--transition-normal, 0.3s ease), 
+              box-shadow var(--transition-normal, 0.3s ease);
+}
+
+/* Glass Card Specular Reflection Highlight */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent 55%
+  );
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* Interactive Hover Elevation */
+.glass-card-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: var(--border-glass-light, rgba(255, 255, 255, 0.22));
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), var(--shadow-glow, 0 0 20px rgba(37, 99, 235, 0.3));
+}
+
+/* Vibrant Accent Border Glass (Selected / Featured state) */
+.glass-card-accent {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.85) 100%);
+  border: 1px solid var(--border-accent, rgba(37, 99, 235, 0.4));
+  box-shadow: var(--shadow-glow, 0 0 25px rgba(37, 99, 235, 0.25));
+}
+
+/* Cyan Glowing Accent Glass */
+.glass-card-cyan {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(6, 182, 212, 0.1) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  box-shadow: var(--shadow-glow-cyan, 0 0 25px rgba(6, 182, 212, 0.25));
+}
+
+/* ==========================================================================
+   2. 3D EVEVATED CARD SURFACES
+   ========================================================================== */
+
+.glass-3d-wrapper {
+  perspective: 1000px;
+}
+
+.glass-3d-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.glass-3d-card:hover {
+  transform: rotateX(4deg) rotateY(-4deg) translateZ(10px);
+}
+
+.glass-3d-layer {
+  transform: translateZ(25px);
+}
+
+/* ==========================================================================
+   3. FROSTED GLASS NAVIGATION & HEADERS
+   ========================================================================== */
+
+.glass-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--nav-height, 70px);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.1));
+  z-index: 1000;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 65px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-glass, rgba(255, 255, 255, 0.1));
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/* ==========================================================================
+   4. GLASS MODALS & FLOATING OVERLAYS
+   ========================================================================== */
+
+.glass-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(11, 17, 32, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.glass-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.glass-modal-content {
+  width: 100%;
+  max-width: 520px;
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-glass-light, rgba(255, 255, 255, 0.18));
+  border-radius: var(--radius-xl, 28px);
+  padding: 1.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  transform: scale(0.92) translateY(20px);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-modal-overlay.active .glass-modal-content {
+  transform: scale(1) translateY(0);
+}
+
+/* ==========================================================================
+   5. GLASS PILLS & INPUT CONTROLS
+   ========================================================================== */
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full, 9999px);
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  color: var(--text-primary, #F8FAFC);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.glass-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12));
+  border-radius: var(--radius-md, 14px);
+  padding: 0.85rem 1.15rem;
+  color: var(--text-primary, #F8FAFC);
+  font-size: 0.95rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-input:focus {
+  border-color: var(--accent-cyan, #06B6D4);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+}
